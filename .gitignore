@@ -1,0 +1,37 @@
+# Rust
+/target/
+Cargo.lock
+**/*.rs.bk
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Build artifacts
+*.o
+*.so
+*.a
+*.dylib
+*.dll
+
+# Database
+*.db
+*.sqlite
+keystore/
+*.sled/
+
+# Logs
+*.log
+
+# Config
+config.local.toml
+
+# Generated files
+proto/generated/
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,16 @@
+[network]
+listen_address = "/ip4/0.0.0.0/tcp/9000"
+bootstrap_peers = []
+
+[crypto]
+keystore_path = "./keystore"
+
+[esim]
+sm_dp_url = "sm-dp.example.com"
+api_key = "your-api-key-here"
+
+[quant]
+market_data_provider = "mock"
+
+[logging]
+level = "info"

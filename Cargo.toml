@@ -1,0 +1,111 @@
+[package]
+name = "quantra"
+version = "0.1.0"
+edition = "2021"
+authors = ["GitMonsters"]
+description = "Comprehensive platform combining quantitative finance, P2P encrypted communication, and eSIM integration"
+license = "MIT"
+repository = "https://github.com/GitMonsters/quantra"
+
+[dependencies]
+# Async runtime
+tokio = { version = "1.38", features = ["full"] }
+async-trait = "0.1"
+futures = "0.3"
+
+# P2P Networking
+libp2p = { version = "0.54", features = [
+    "tcp",
+    "dns",
+    "noise",
+    "yamux",
+    "gossipsub",
+    "kad",
+    "mdns",
+    "relay",
+    "dcutr",
+    "identify",
+    "ping",
+    "request-response",
+    "macros"
+] }
+
+# PGP/Cryptography - Pure Rust implementation
+pgp = "0.13"
+ring = "0.17"
+sha2 = "0.10"
+aes-gcm = "0.10"
+ed25519-dalek = "2.0"
+rsa = "0.9"
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+bincode = "1.3"
+prost = "0.13"
+prost-types = "0.13"
+
+# gRPC
+tonic = "0.12"
+tonic-build = "0.12"
+
+# eSIM/Mobile
+qrcode = "0.14"
+image = "0.25"
+reqwest = { version = "0.12", features = ["json", "rustls-tls"] }
+base64 = "0.22"
+
+# Quantitative Finance
+rust_decimal = "1.35"
+chrono = { version = "0.4", features = ["serde"] }
+ndarray = "0.16"
+statrs = "0.17"
+
+# Database
+sled = "0.34"
+
+# Logging and Error Handling
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+anyhow = "1.0"
+thiserror = "1.0"
+
+# Configuration
+config = "0.14"
+toml = "0.8"
+clap = { version = "4.5", features = ["derive"] }
+
+# Utils
+uuid = { version = "1.10", features = ["v4", "serde"] }
+once_cell = "1.19"
+parking_lot = "0.12"
+hex = "0.4"
+rand = "0.8"
+
+[build-dependencies]
+tonic-build = "0.12"
+
+[dev-dependencies]
+tokio-test = "0.4"
+criterion = "0.5"
+
+[[bin]]
+name = "quantra"
+path = "src/main.rs"
+
+[[bin]]
+name = "quantra-server"
+path = "src/bin/server.rs"
+
+[[bin]]
+name = "quantra-cli"
+path = "src/bin/cli.rs"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true
+
+[profile.dev]
+opt-level = 0
