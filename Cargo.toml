@@ -1,11 +1,11 @@
 [package]
-name = "quantra"
+name = "quantra-l"
 version = "0.1.0"
 edition = "2021"
 authors = ["GitMonsters"]
-description = "Comprehensive platform combining quantitative finance, P2P encrypted communication, and eSIM integration"
+description = "Quantra-L: Comprehensive platform combining quantitative finance, P2P encrypted communication, and eSIM integration"
 license = "MIT"
-repository = "https://github.com/GitMonsters/quantra"
+repository = "https://github.com/GitMonsters/Quantra-L"
 
 [dependencies]
 # Async runtime
@@ -90,15 +90,15 @@ tokio-test = "0.4"
 criterion = "0.5"
 
 [[bin]]
-name = "quantra"
+name = "quantra-l"
 path = "src/main.rs"
 
 [[bin]]
-name = "quantra-server"
+name = "quantra-l-server"
 path = "src/bin/server.rs"
 
 [[bin]]
-name = "quantra-cli"
+name = "quantra-l-cli"
 path = "src/bin/cli.rs"
 
 [profile.release]

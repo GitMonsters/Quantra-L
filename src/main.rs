@@ -8,8 +8,8 @@ use clap::{Parser, Subcommand};
 use tracing::{info, error};
 
 #[derive(Parser)]
-#[command(name = "quantra")]
-#[command(about = "Quantra - Quantitative Finance, P2P Messaging, and eSIM Integration", long_about = None)]
+#[command(name = "quantra-l")]
+#[command(about = "Quantra-L - Quantitative Finance, P2P Messaging, and eSIM Integration for Linux", long_about = None)]
 struct Cli {
     #[command(subcommand)]
     command: Commands,
@@ -73,7 +73,7 @@ async fn main() -> Result<()> {
         )
         .init();
 
-    info!("Starting Quantra v{}", env!("CARGO_PKG_VERSION"));
+    info!("Starting Quantra-L v{}", env!("CARGO_PKG_VERSION"));
 
     let cli = Cli::parse();
 

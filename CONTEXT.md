@@ -1,7 +1,7 @@
 # Project Context
 
 ## Current Task
-Create and publish GitMonsters/quantra repository - a comprehensive Rust platform combining quantitative finance, P2P encrypted communication, and eSIM integration.
+Create and publish GitMonsters/Quantra-L repository - a comprehensive Linux Rust platform combining quantitative finance, P2P encrypted communication, and eSIM integration.
 
 ## Progress
 - ✅ Created complete Rust project structure
