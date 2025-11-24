@@ -27,7 +27,9 @@ libp2p = { version = "0.54", features = [
     "identify",
     "ping",
     "request-response",
-    "macros"
+    "macros",
+    "tokio",
+    "cbor"
 ] }
 
 # PGP/Cryptography - Pure Rust implementation

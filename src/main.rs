@@ -2,6 +2,7 @@ mod p2p;
 mod crypto;
 mod esim;
 mod quant;
+mod zerotrust;
 
 use anyhow::Result;
 use clap::{Parser, Subcommand};
@@ -69,6 +70,15 @@ enum Commands {
         country: Option<String>,
         #[arg(short, long, help = "Search carriers by name")]
         search: Option<String>,
+    },
+    /// Zero-Trust security status
+    ZeroTrustStatus,
+    /// Create test Zero-Trust connection
+    ZeroTrustTest {
+        #[arg(short, long)]
+        peer_id: String,
+        #[arg(short, long, default_value = "verified")]
+        security_level: String,
     },
 }
 
@@ -240,6 +250,76 @@ async fn main() -> Result<()> {
 
             println!("\n💡 Usage: quantra-l provision-esim --carrier <carrier_id> --plan <plan_name>");
             println!("   Add --secure for encrypted provisioning");
+        }
+        Commands::ZeroTrustStatus => {
+            info!("Checking Zero-Trust security status");
+            let zt = zerotrust::ZeroTrustContext::new()?;
+            let stats = zt.get_stats().await?;
+
+            println!("🔒 Zero-Trust Security Status");
+            println!("================================");
+            println!("Active Connections: {}", stats.total_connections);
+            println!("\nSecurity Levels:");
+            for (level, count) in stats.by_security_level {
+                println!("  {:?}: {}", level, count);
+            }
+            println!("\nVM Sandboxes: {}", stats.active_vm_sandboxes);
+            println!("Security Events: {}", stats.total_security_events);
+            println!("Verification Failures: {}", stats.verification_failures);
+        }
+        Commands::ZeroTrustTest { peer_id, security_level } => {
+            info!("Testing Zero-Trust connection for peer: {}", peer_id);
+
+            let zt = zerotrust::ZeroTrustContext::new()?;
+
+            // Create test identity
+            let identity = zerotrust::identity::IdentityManager::create_identity(
+                peer_id.clone(),
+                std::collections::HashMap::new(),
+            );
+
+            // Create connection request
+            let request = zerotrust::ConnectionRequest {
+                peer_id: peer_id.clone(),
+                identity,
+                requested_resources: vec!["test/resource".to_string()],
+                client_metadata: std::collections::HashMap::new(),
+                timestamp: chrono::Utc::now(),
+            };
+
+            // Evaluate connection
+            println!("🔍 Evaluating connection request...");
+            let decision = zt.evaluate_connection(request.clone()).await?;
+
+            match decision {
+                zerotrust::AccessDecision::Allow => {
+                    println!("✅ Access ALLOWED");
+                    println!("\n🔗 Establishing secure connection...");
+
+                    let connection = zt.establish_connection(request).await?;
+
+                    println!("✅ Connection established!");
+                    println!("   Connection ID: {}", connection.id);
+                    println!("   Security Level: {:?}", connection.security_level);
+                    if let Some(vm_id) = &connection.vm_sandbox_id {
+                        println!("   VM Sandbox: {}", vm_id);
+                    }
+
+                    println!("\n📊 Stats:");
+                    let stats = zt.get_stats().await?;
+                    println!("   Active Connections: {}", stats.total_connections);
+                    println!("   VM Sandboxes: {}", stats.active_vm_sandboxes);
+                }
+                zerotrust::AccessDecision::Deny(reason) => {
+                    println!("❌ Access DENIED: {}", reason);
+                }
+                zerotrust::AccessDecision::AllowWithConditions(conditions) => {
+                    println!("⚠️  Access allowed with conditions:");
+                    for condition in conditions {
+                        println!("   - {}", condition);
+                    }
+                }
+            }
         }
     }
 
