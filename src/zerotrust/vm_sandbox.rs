@@ -170,12 +170,15 @@ impl VMManager {
 
     /// Create Docker container sandbox
     async fn create_docker_sandbox(&self, id: &str, limits: &ResourceLimits) -> Result<String> {
+        // ✅ Quick win #3: Validate container name (prevent injection)
+        let safe_id = Self::sanitize_container_name(id)?;
+
         // Create isolated network namespace with Docker
         let output = Command::new("docker")
             .args(&[
                 "run",
                 "-d",
-                "--name", id,
+                "--name", &safe_id,
                 "--network", "none", // Isolated network
                 "--cpus", &format!("{}", limits.cpu_shares as f32 / 1024.0),
                 "--memory", &format!("{}m", limits.memory_mb),
@@ -236,6 +239,33 @@ impl VMManager {
     async fn destroy_firecracker_sandbox(&self, vm_id: &str) -> Result<()> {
         tracing::info!("Destroyed Firecracker sandbox {}", vm_id);
         Ok(())
+    }
+
+    /// ✅ Quick win #3: Sanitize container name to prevent command injection
+    fn sanitize_container_name(name: &str) -> Result<String> {
+        // Only allow alphanumeric characters, dashes, and underscores
+        if !name.chars().all(|c| c.is_alphanumeric() || c == '-' || c == '_') {
+            return Err(anyhow::anyhow!(
+                "Invalid container name: {}. Only alphanumeric, dash, and underscore allowed.",
+                name
+            ));
+        }
+
+        // Limit length to prevent resource exhaustion
+        if name.len() > 64 {
+            return Err(anyhow::anyhow!(
+                "Container name too long: {} characters (max 64)",
+                name.len()
+            ));
+        }
+
+        // Ensure not empty
+        if name.is_empty() {
+            return Err(anyhow::anyhow!("Container name cannot be empty"));
+        }
+
+        tracing::debug!("✅ Validated container name: {}", name);
+        Ok(name.to_string())
     }
 }
 

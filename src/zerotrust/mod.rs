@@ -65,20 +65,42 @@ pub struct SecureConnection {
 }
 
 impl ZeroTrustContext {
-    pub fn new() -> Result<Self> {
+    /// ✅ OPTIMIZATION: Now async for non-blocking audit log initialization
+    pub async fn new() -> Result<Self> {
+        // Try user-local log path first, fallback to system path
+        let log_path = Self::get_default_log_path();
+        Self::with_log_path(&log_path).await
+    }
+
+    /// Create with custom audit log path
+    /// ✅ OPTIMIZATION: Now async for non-blocking audit log initialization
+    pub async fn with_log_path(log_path: &str) -> Result<Self> {
         Ok(Self {
             identity_manager: Arc::new(RwLock::new(identity::IdentityManager::new()?)),
             policy_engine: Arc::new(RwLock::new(policy::PolicyEngine::new())),
             vm_manager: Arc::new(RwLock::new(vm_sandbox::VMManager::new()?)),
             verifier: Arc::new(RwLock::new(verification::ContinuousVerifier::new())),
-            audit_log: Arc::new(RwLock::new(audit::AuditLogger::new()?)),
+            // ✅ OPTIMIZATION: Use async tokio::fs for non-blocking I/O
+            audit_log: Arc::new(RwLock::new(audit::AuditLogger::with_path(log_path).await?)),
         })
     }
 
+    /// Get the default log path (user-local or system)
+    fn get_default_log_path() -> String {
+        // Try user-local first
+        if let Some(home) = std::env::var_os("HOME") {
+            let user_log = std::path::Path::new(&home).join(".quantra/audit.log");
+            return user_log.to_string_lossy().to_string();
+        }
+        // Fallback to system path
+        "/var/log/quantra/audit.log".to_string()
+    }
+
     /// Evaluate connection request using Zero-Trust principles
+    /// ✅ OPTIMIZATION: Takes reference to avoid clone when followed by establish_connection
     pub async fn evaluate_connection(
         &self,
-        request: ConnectionRequest,
+        request: &ConnectionRequest,
     ) -> Result<AccessDecision> {
         // Step 1: Verify identity
         let identity_valid = self
@@ -179,9 +201,55 @@ impl ZeroTrustContext {
     }
 
     /// Continuously verify active connection
-    pub async fn verify_connection(&self, connection_id: &str) -> Result<bool> {
-        let verifier = self.verifier.read().await;
+    /// Returns full verification result with behavioral analysis
+    pub async fn verify_connection(&self, connection_id: &str) -> Result<verification::VerificationResult> {
+        let mut verifier = self.verifier.write().await;
         verifier.verify(connection_id).await
+    }
+
+    /// Simple check if connection is still valid (backward compatible)
+    pub async fn is_connection_valid(&self, connection_id: &str) -> Result<bool> {
+        let mut verifier = self.verifier.write().await;
+        let result = verifier.verify(connection_id).await?;
+        Ok(result.success)
+    }
+
+    /// Issue a re-authentication challenge for a connection
+    pub async fn issue_challenge(&self, connection_id: &str) -> Result<verification::VerificationChallenge> {
+        let mut verifier = self.verifier.write().await;
+        verifier.issue_challenge(connection_id)
+    }
+
+    /// Verify a challenge response
+    pub async fn verify_challenge_response(
+        &self,
+        connection_id: &str,
+        signature: &[u8]
+    ) -> Result<verification::VerificationResult> {
+        let mut verifier = self.verifier.write().await;
+        verifier.verify_challenge_response(connection_id, signature).await
+    }
+
+    /// Record behavioral event for a connection
+    pub async fn record_behavior(
+        &self,
+        connection_id: &str,
+        event: verification::BehaviorEvent
+    ) -> Result<()> {
+        let mut verifier = self.verifier.write().await;
+        verifier.record_behavior(connection_id, event)
+    }
+
+    /// Get behavioral profile for a peer
+    pub async fn get_behavior_profile(&self, peer_id: &str) -> Option<verification::BehaviorProfile> {
+        let verifier = self.verifier.read().await;
+        verifier.get_behavior_profile(peer_id).cloned()
+    }
+
+    /// Get verification statistics
+    pub async fn get_verification_stats(&self) -> verification::VerificationStats {
+        let verifier = self.verifier.read().await;
+        verifier.get_stats()
     }
 
     /// Terminate connection and cleanup resources
@@ -263,6 +331,7 @@ impl ZeroTrustContext {
             peer_id: peer_id.to_string(),
             security_level,
             details: HashMap::new(),
+            prev_hash: String::new(), // Will be set by audit logger
         };
 
         self.audit_log.write().await.log(event).await?;
