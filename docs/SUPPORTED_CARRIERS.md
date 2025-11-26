@@ -1,23 +1,23 @@
-# Supported eSIM Carriers in Quantra-L
+# Supported eSIM Carriers in QuantraBand
 
 ## Overview
 
-Quantra-L supports **26+ carriers** across **multiple countries** with full eSIM provisioning capabilities.
+QuantraBand supports **26+ carriers** across **multiple countries** with full eSIM provisioning capabilities.
 
 ## Quick Start
 
 ```bash
 # List all carriers
-quantra-l list-carriers
+quantraband list-carriers
 
 # Search for specific carrier
-quantra-l list-carriers --search "verizon"
+quantraband list-carriers --search "verizon"
 
 # Filter by country
-quantra-l list-carriers --country "United States"
+quantraband list-carriers --country "United States"
 
 # Provision eSIM securely
-quantra-l provision-esim --carrier verizon --plan "Unlimited" --secure
+quantraband provision-esim --carrier verizon --plan "Unlimited" --secure
 ```
 
 ## Supported Carriers by Region
@@ -96,7 +96,7 @@ quantra-l provision-esim --carrier verizon --plan "Unlimited" --secure
 
 ### Full Security Support (TLS 1.3 + E2EE)
 
-These carriers support Quantra-L's complete security stack:
+These carriers support QuantraBand's complete security stack:
 
 - ✅ **Verizon** (`verizon`)
 - ✅ **AT&T** (`att`)
@@ -107,7 +107,7 @@ These carriers support Quantra-L's complete security stack:
 
 Use `--secure` flag for maximum protection:
 ```bash
-quantra-l provision-esim --carrier verizon --plan "Unlimited" --secure
+quantraband provision-esim --carrier verizon --plan "Unlimited" --secure
 ```
 
 ### Basic Security (TLS only)
@@ -118,7 +118,7 @@ All other carriers support standard TLS encryption but may not have API endpoint
 
 ### Example 1: Provision Verizon eSIM (Secure)
 ```bash
-quantra-l provision-esim \
+quantraband provision-esim \
   --carrier verizon \
   --plan "Unlimited 5G" \
   --secure
@@ -136,7 +136,7 @@ Output:
 
 ### Example 2: Provision Google Fi (International Travel)
 ```bash
-quantra-l provision-esim \
+quantraband provision-esim \
   --carrier google_fi \
   --plan "Flexible" \
   --secure
@@ -144,7 +144,7 @@ quantra-l provision-esim \
 
 ### Example 3: Provision Airalo (Global eSIM)
 ```bash
-quantra-l provision-esim \
+quantraband provision-esim \
   --carrier airalo \
   --plan "Europe 5GB" \
   --secure
@@ -153,10 +153,10 @@ quantra-l provision-esim \
 ### Example 4: List Carriers by Country
 ```bash
 # List all US carriers
-quantra-l list-carriers --country "United States"
+quantraband list-carriers --country "United States"
 
 # List all Japanese carriers
-quantra-l list-carriers --country "Japan"
+quantraband list-carriers --country "Japan"
 ```
 
 ## Carrier Requirements
@@ -181,7 +181,7 @@ All carriers require:
 
 ## SM-DP+ Addresses
 
-Each carrier has a unique SM-DP+ (Subscription Manager Data Preparation) server address. Quantra-L automatically uses the correct address based on the carrier ID.
+Each carrier has a unique SM-DP+ (Subscription Manager Data Preparation) server address. QuantraBand automatically uses the correct address based on the carrier ID.
 
 **Examples:**
 - Verizon: `sm-v4-004-a-gtm.pr.go-esim.com`
@@ -247,13 +247,13 @@ Test carrier integration without actual provisioning:
 
 ```bash
 # Dry run (list carriers)
-quantra-l list-carriers
+quantraband list-carriers
 
 # Search for specific carrier
-quantra-l list-carriers --search "tmobile"
+quantraband list-carriers --search "tmobile"
 
 # Check carrier details
-quantra-l list-carriers --search "verizon"
+quantraband list-carriers --search "verizon"
 ```
 
 ## Troubleshooting
@@ -261,11 +261,11 @@ quantra-l list-carriers --search "verizon"
 ### "Carrier not found"
 ```bash
 # Check available carriers
-quantra-l list-carriers
+quantraband list-carriers
 
 # Use exact carrier ID (lowercase)
-quantra-l provision-esim --carrier verizon  # ✅ Correct
-quantra-l provision-esim --carrier Verizon  # ❌ Wrong (case-sensitive)
+quantraband provision-esim --carrier verizon  # ✅ Correct
+quantraband provision-esim --carrier Verizon  # ❌ Wrong (case-sensitive)
 ```
 
 ### "Confirmation code required"
@@ -286,7 +286,7 @@ Planned additions:
 - 🇮🇳 Jio India
 - 🇧🇷 Vivo Brazil
 
-Want a specific carrier? [Open an issue on GitHub](https://github.com/GitMonsters/Quantra-L/issues)!
+Want a specific carrier? [Open an issue on GitHub](https://github.com/GitMonsters/QuantraBand/issues)!
 
 ## License Compliance
 

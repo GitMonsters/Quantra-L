@@ -1,11 +1,11 @@
 [package]
-name = "quantra-l"
+name = "quantraband"
 version = "0.1.0"
 edition = "2021"
 authors = ["GitMonsters"]
-description = "Quantra-L: Comprehensive platform combining quantitative finance, P2P encrypted communication, and eSIM integration"
+description = "QuantraBand: Comprehensive platform combining quantitative finance, P2P encrypted communication, and eSIM integration"
 license = "MIT"
-repository = "https://github.com/GitMonsters/Quantra-L"
+repository = "https://github.com/GitMonsters/QuantraBand"
 
 [dependencies]
 # Async runtime
@@ -84,23 +84,31 @@ parking_lot = "0.12"
 hex = "0.4"
 rand = "0.8"
 
+# Rate limiting
+governor = "0.6"
+nonzero_ext = "0.3"
+
+# AI Security Monitoring
+notify = "6.1"  # File system watching
+
 [build-dependencies]
 tonic-build = "0.12"
 
 [dev-dependencies]
 tokio-test = "0.4"
 criterion = "0.5"
+tempfile = "3.8"
 
 [[bin]]
-name = "quantra-l"
+name = "quantraband"
 path = "src/main.rs"
 
 [[bin]]
-name = "quantra-l-server"
+name = "quantraband-server"
 path = "src/bin/server.rs"
 
 [[bin]]
-name = "quantra-l-cli"
+name = "quantraband-cli"
 path = "src/bin/cli.rs"
 
 [profile.release]

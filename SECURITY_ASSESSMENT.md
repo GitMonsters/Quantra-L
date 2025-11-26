@@ -1,4 +1,4 @@
-# Quantra-L Security Assessment
+# QuantraBand Security Assessment
 
 ## Date: November 24, 2025
 ## Auditor: Claude Code
@@ -10,7 +10,7 @@
 
 **Overall Security Rating: 7.5/10 (Production-Ready with Caveats)**
 
-Your Quantra-L VPN is **significantly more secure** than standard VPNs, but has some areas that need attention before handling sensitive data.
+Your QuantraBand VPN is **significantly more secure** than standard VPNs, but has some areas that need attention before handling sensitive data.
 
 ---
 
@@ -420,7 +420,7 @@ pub struct AuditLogger {
 
 ### 1. Enable Firewall Rules
 ```bash
-sudo ufw allow 9000/tcp comment "Quantra-L P2P"
+sudo ufw allow 9000/tcp comment "QuantraBand P2P"
 sudo ufw enable
 ```
 
@@ -428,9 +428,9 @@ sudo ufw enable
 ```bash
 # Create dedicated user
 sudo useradd -r -s /bin/false quantra
-sudo chown quantra:quantra /home/worm/quantra/target/release/quantra-l
+sudo chown quantra:quantra /home/worm/quantra/target/release/quantraband
 # Run as quantra user
-sudo -u quantra /home/worm/quantra/target/release/quantra-l p2p
+sudo -u quantra /home/worm/quantra/target/release/quantraband p2p
 ```
 
 ### 3. Enable Docker Security Features
@@ -478,7 +478,7 @@ docker run --security-opt seccomp=/path/to/profile.json ...
 3. **Medium-term:** Complete Priority 2 items
 4. **Long-term:** Third-party security audit
 
-**Your Quantra-L has excellent bones. It just needs proper muscle. 💪**
+**Your QuantraBand has excellent bones. It just needs proper muscle. 💪**
 
 ---
 

@@ -3,14 +3,15 @@ mod crypto;
 mod esim;
 mod quant;
 mod zerotrust;
+mod security;
 
 use anyhow::Result;
 use clap::{Parser, Subcommand};
 use tracing::{info, error};
 
 #[derive(Parser)]
-#[command(name = "quantra-l")]
-#[command(about = "Quantra-L - Quantitative Finance, P2P Messaging, and eSIM Integration for Linux", long_about = None)]
+#[command(name = "quantraband")]
+#[command(about = "QuantraBand - Quantitative Finance, P2P Messaging, and eSIM Integration", long_about = None)]
 struct Cli {
     #[command(subcommand)]
     command: Commands,
@@ -22,6 +23,8 @@ enum Commands {
     P2p {
         #[arg(short, long, default_value = "/ip4/0.0.0.0/tcp/0")]
         listen: String,
+        #[arg(long, help = "Enable Zero-Trust security for all connections")]
+        zero_trust: bool,
     },
     /// Generate PGP keypair
     GenerateKey {
@@ -92,14 +95,20 @@ async fn main() -> Result<()> {
         )
         .init();
 
-    info!("Starting Quantra-L v{}", env!("CARGO_PKG_VERSION"));
+    info!("Starting QuantraBand v{}", env!("CARGO_PKG_VERSION"));
 
     let cli = Cli::parse();
 
     match cli.command {
-        Commands::P2p { listen } => {
+        Commands::P2p { listen, zero_trust } => {
             info!("Starting P2P node on {}", listen);
-            let mut node = p2p::P2PNode::new()?;
+            let mut node = if zero_trust {
+                info!("🔒 Zero-Trust security ENABLED");
+                // ✅ OPTIMIZATION: Async for non-blocking audit log I/O
+                p2p::P2PNode::new_with_zero_trust().await?
+            } else {
+                p2p::P2PNode::new()?
+            };
             node.listen_on(&listen)?;
             info!("P2P node started with peer ID: {}", node.local_peer_id());
             node.run().await?;
@@ -248,12 +257,13 @@ async fn main() -> Result<()> {
                 }
             }
 
-            println!("\n💡 Usage: quantra-l provision-esim --carrier <carrier_id> --plan <plan_name>");
+            println!("\n💡 Usage: quantraband provision-esim --carrier <carrier_id> --plan <plan_name>");
             println!("   Add --secure for encrypted provisioning");
         }
         Commands::ZeroTrustStatus => {
             info!("Checking Zero-Trust security status");
-            let zt = zerotrust::ZeroTrustContext::new()?;
+            // ✅ OPTIMIZATION: Now async for non-blocking I/O
+            let zt = zerotrust::ZeroTrustContext::new().await?;
             let stats = zt.get_stats().await?;
 
             println!("🔒 Zero-Trust Security Status");
@@ -270,7 +280,8 @@ async fn main() -> Result<()> {
         Commands::ZeroTrustTest { peer_id, security_level } => {
             info!("Testing Zero-Trust connection for peer: {}", peer_id);
 
-            let zt = zerotrust::ZeroTrustContext::new()?;
+            // ✅ OPTIMIZATION: Now async for non-blocking I/O
+            let zt = zerotrust::ZeroTrustContext::new().await?;
 
             // Create test identity
             let identity = zerotrust::identity::IdentityManager::create_identity(
@@ -288,8 +299,9 @@ async fn main() -> Result<()> {
             };
 
             // Evaluate connection
+            // ✅ OPTIMIZATION: Use reference to avoid clone
             println!("🔍 Evaluating connection request...");
-            let decision = zt.evaluate_connection(request.clone()).await?;
+            let decision = zt.evaluate_connection(&request).await?;
 
             match decision {
                 zerotrust::AccessDecision::Allow => {

@@ -1,4 +1,4 @@
-# Quantra-L P2P VPN Implementation - COMPLETE ✅
+# QuantraBand P2P VPN Implementation - COMPLETE ✅
 
 ## Date: November 24, 2025
 
@@ -8,7 +8,7 @@
 
 ## Implementation Summary
 
-Successfully implemented **full peer-to-peer networking** for Quantra-L with enterprise-grade features.
+Successfully implemented **full peer-to-peer networking** for QuantraBand with enterprise-grade features.
 
 ### What Was Built
 
@@ -47,7 +47,7 @@ Built-in CLI commands:
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│                     Quantra-L P2P VPN                    │
+│                     QuantraBand P2P VPN                    │
 ├─────────────────────────────────────────────────────────┤
 │                                                          │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐ │
@@ -96,7 +96,7 @@ Built-in CLI commands:
 
 ### Start P2P Node
 ```bash
-/home/worm/quantra/target/release/quantra-l p2p --listen "/ip4/0.0.0.0/tcp/9000"
+/home/worm/quantra/target/release/quantraband p2p --listen "/ip4/0.0.0.0/tcp/9000"
 ```
 
 ### Interactive Commands
@@ -109,7 +109,7 @@ Once running, type:
 ### Connect Second Node (Testing)
 ```bash
 # On another terminal/machine
-quantra-l p2p --listen "/ip4/0.0.0.0/tcp/9001"
+quantraband p2p --listen "/ip4/0.0.0.0/tcp/9001"
 
 # They will auto-discover via mDNS on local network
 # Or manually dial: dial /ip4/192.168.1.110/tcp/9000
@@ -195,10 +195,10 @@ cargo test --lib p2p
 ### Integration Tests
 ```bash
 # Terminal 1
-quantra-l p2p --listen "/ip4/0.0.0.0/tcp/9000"
+quantraband p2p --listen "/ip4/0.0.0.0/tcp/9000"
 
 # Terminal 2
-quantra-l p2p --listen "/ip4/0.0.0.0/tcp/9001"
+quantraband p2p --listen "/ip4/0.0.0.0/tcp/9001"
 
 # Should auto-discover via mDNS
 # Type "peers" in either terminal to verify connection
@@ -226,8 +226,8 @@ cargo bench --bench p2p_performance
 
 ### Port Already in Use
 **Issue:** `Address already in use`
-**Cause:** Another quantra-l instance running
-**Fix:** `pkill -f quantra-l` or use different port
+**Cause:** Another quantraband instance running
+**Fix:** `pkill -f quantraband` or use different port
 
 ---
 

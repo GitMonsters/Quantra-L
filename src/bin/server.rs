@@ -1,6 +1,6 @@
-// Quantra-L Server - Future implementation for dedicated server node
+// QuantraBand Server - Future implementation for dedicated server node
 
 fn main() {
-    println!("Quantra-L server - Coming soon!");
-    println!("Use `quantra-l p2p` to start a P2P node for now.");
+    println!("QuantraBand server - Coming soon!");
+    println!("Use `quantraband p2p` to start a P2P node for now.");
 }

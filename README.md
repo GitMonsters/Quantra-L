@@ -1,4 +1,4 @@
-# Quantra-L
+# QuantraBand
 
 **A comprehensive Linux platform combining quantitative finance, P2P encrypted communication, and eSIM mobile integration**
 
@@ -61,8 +61,8 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 ```bash
 # Clone repository
-git clone https://github.com/GitMonsters/Quantra-L.git
-cd Quantra-L
+git clone https://github.com/GitMonsters/QuantraBand.git
+cd QuantraBand
 
 # Build all components
 mkdir build && cd build
@@ -76,14 +76,14 @@ make -j$(nproc)
 ### Quick Start
 
 ```bash
-# Start the Quantra-L server
-./build/bin/quantra-l-server --config config/server.yaml
+# Start the QuantraBand server
+./build/bin/quantraband-server --config config/server.yaml
 
 # Run CLI client
-./build/bin/quantra-l-cli
+./build/bin/quantraband-cli
 
 # Run main binary
-./target/release/quantra-l --help
+./target/release/quantraband --help
 ```
 
 ## Components
@@ -162,7 +162,7 @@ Contributions welcome! Please read CONTRIBUTING.md for guidelines.
 ## Contact
 
 - GitHub: [@GitMonsters](https://github.com/GitMonsters)
-- Issues: [GitHub Issues](https://github.com/GitMonsters/Quantra-L/issues)
+- Issues: [GitHub Issues](https://github.com/GitMonsters/QuantraBand/issues)
 
 ---
 

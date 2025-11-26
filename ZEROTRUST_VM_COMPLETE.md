@@ -1,4 +1,4 @@
-# Quantra-L Zero-Trust + VM Isolation - COMPLETE ✅
+# QuantraBand Zero-Trust + VM Isolation - COMPLETE ✅
 
 ## Date: November 24, 2025
 
@@ -8,7 +8,7 @@
 
 ## 🎯 Overview
 
-Implemented **enterprise-grade Zero-Trust security** with **VM-based isolation** for Quantra-L VPN.
+Implemented **enterprise-grade Zero-Trust security** with **VM-based isolation** for QuantraBand VPN.
 
 ### Zero-Trust Principles Implemented
 
@@ -228,7 +228,7 @@ Re-verify identity
 
 ### Check Zero-Trust Status
 ```bash
-quantra-l zero-trust-status
+quantraband zero-trust-status
 ```
 
 **Output:**
@@ -247,7 +247,7 @@ Verification Failures: 0
 
 ### Test Connection with Zero-Trust
 ```bash
-quantra-l zero-trust-test --peer-id "peer-abc-123"
+quantraband zero-trust-test --peer-id "peer-abc-123"
 ```
 
 **Output:**
@@ -269,7 +269,7 @@ quantra-l zero-trust-test --peer-id "peer-abc-123"
 For privileged connections, manually set trust score >70 or request critical resources:
 
 ```bash
-quantra-l zero-trust-test --peer-id "admin-user" --security-level "privileged"
+quantraband zero-trust-test --peer-id "admin-user" --security-level "privileged"
 ```
 
 **Output (with VM):**
@@ -347,22 +347,22 @@ cargo test --lib zerotrust
 ### Integration Test
 ```bash
 # Terminal 1: Start P2P node with Zero-Trust
-quantra-l p2p --listen "/ip4/0.0.0.0/tcp/9000"
+quantraband p2p --listen "/ip4/0.0.0.0/tcp/9000"
 
 # Terminal 2: Test connection
-quantra-l zero-trust-test --peer-id "test-peer"
+quantraband zero-trust-test --peer-id "test-peer"
 
 # Terminal 3: Check status
-quantra-l zero-trust-status
+quantraband zero-trust-status
 ```
 
 ### Load Test (simulate 100 connections)
 ```bash
 for i in {1..100}; do
-  quantra-l zero-trust-test --peer-id "peer-$i" &
+  quantraband zero-trust-test --peer-id "peer-$i" &
 done
 wait
-quantra-l zero-trust-status
+quantraband zero-trust-status
 ```
 
 ---

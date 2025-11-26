@@ -1,8 +1,8 @@
-# eSIM Communication Security in Quantra-L
+# eSIM Communication Security in QuantraBand
 
 ## Overview
 
-Quantra-L implements comprehensive security for eSIM provisioning and communication, following GSMA SGP.22 standards with additional hardening layers.
+QuantraBand implements comprehensive security for eSIM provisioning and communication, following GSMA SGP.22 standards with additional hardening layers.
 
 ## Security Layers
 
@@ -171,12 +171,12 @@ let code = security_context.generate_confirmation_code(matching_id)?;
 
 ### Basic (Insecure) Mode
 ```bash
-quantra-l provision-esim --carrier "Verizon" --plan "Unlimited"
+quantraband provision-esim --carrier "Verizon" --plan "Unlimited"
 ```
 
 ### Secure Mode (Recommended)
 ```bash
-quantra-l provision-esim --carrier "Verizon" --plan "Unlimited" --secure
+quantraband provision-esim --carrier "Verizon" --plan "Unlimited" --secure
 ```
 
 ### Secure Mode Output
